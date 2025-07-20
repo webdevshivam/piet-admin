@@ -18,7 +18,7 @@ import {
   type CellsCommittees,
   type InsertCellsCommittees,
 } from "@shared/schema";
-import FileUpload from "@/components/ui/file-upload";
+
 
 interface CellsModalProps {
   isOpen: boolean;
@@ -88,9 +88,7 @@ export default function CellsModal({ isOpen, onClose, cell }: CellsModalProps) {
     mutation.mutate(data);
   };
 
-  const handleFileUpload = (url: string) => {
-    form.setValue("pdfUrl", url);
-  };
+  
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -103,15 +101,6 @@ export default function CellsModal({ isOpen, onClose, cell }: CellsModalProps) {
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <Label htmlFor="cellId">Cell ID</Label>
-            <Input
-              id="cellId"
-              {...form.register("cellId")}
-              placeholder="CELL001"
-            />
-          </div>
-
-          <div>
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
@@ -121,13 +110,18 @@ export default function CellsModal({ isOpen, onClose, cell }: CellsModalProps) {
           </div>
 
           <div>
-            <Label>PDF Document (Optional)</Label>
-            <FileUpload
-              onUpload={handleFileUpload}
-              accept=".pdf"
-              maxSize={10 * 1024 * 1024} // 10MB
-              currentFile={form.watch("pdfUrl")}
+            <Label htmlFor="pdfUrl">PDF Document URL</Label>
+            <Input
+              id="pdfUrl"
+              {...form.register("pdfUrl")}
+              placeholder="https://example.com/document.pdf"
+              type="url"
             />
+            {form.formState.errors.pdfUrl && (
+              <p className="text-sm text-red-500 mt-1">
+                {form.formState.errors.pdfUrl.message}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end space-x-3 pt-6 border-t">

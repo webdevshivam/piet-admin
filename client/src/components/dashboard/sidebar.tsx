@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { 
   LayoutDashboard, Users, Image, Newspaper, FileText, 
-  UserCheck, Folder, Camera, X
+  UserCheck, Folder, Camera, X, User
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,7 @@ const navigation = [
   { name: "Management Team", href: "/management", icon: UserCheck },
   { name: "Cells & Committees", href: "/cells", icon: Folder },
   { name: "Gallery", href: "/gallery", icon: Camera },
+  { name: "Profile", href: "/profile", icon: User },
 ];
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {

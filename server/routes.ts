@@ -25,8 +25,15 @@ import {
   insertManagementTeamSchema,
   insertCellsCommitteesSchema,
   insertGallerySchema,
+  registerUserSchema,
+  loginUserSchema,
+  updateUserSchema,
 } from "@shared/schema";
 import { z } from "zod";
+import { FacultyModel, BannerModel, NewsModel, IprModel, ManagementTeamModel, CellsCommitteesModel, GalleryModel } from "./models/index";
+import { User } from "./models/user";
+import jwt from "jsonwebtoken";
+import validator from "validator";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Helper for string ID parsing
@@ -34,16 +41,142 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return req.params.id; // IDs are strings like "6876073fc80381755fbb6aaa"
   }
 
-    app.post("/api/login", (req, res) => {
-    const { username, password } = req.body;
+    
 
-    // This is a simple, hardcoded check for demonstration purposes.
-    // In a real-world application, you should validate against a database
-    // using hashed passwords.
-    if (username === "admin" && password === "admin") {
-      res.status(200).json({ message: "Login successful" });
-    } else {
-      res.status(401).json({ message: "Invalid username or password" });
+  // User login
+  app.post("/api/login", async (req, res) => {
+    try {
+      const validatedData = loginUserSchema.parse(req.body);
+
+      // Find user by email
+      const user = await User.findOne({ email: validatedData.email });
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Check password
+      const isPasswordValid = await user.comparePassword(validatedData.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user._id, email: user.email },
+        process.env.JWT_SECRET || "your-secret-key",
+        { expiresIn: "7d" }
+      );
+
+      res.status(200).json({
+        message: "Login successful",
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        },
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Failed to login" });
+    }
+  });
+
+  // Get user profile
+  app.get("/api/profile", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key") as any;
+      const user = await User.findById(decoded.userId).select("-password");
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      });
+    } catch (error) {
+      res.status(401).json({ message: "Invalid token" });
+    }
+  });
+
+  // Update user profile
+  app.put("/api/profile", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key") as any;
+      const user = await User.findById(decoded.userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const validatedData = updateUserSchema.parse(req.body);
+
+      // If updating password, verify current password
+      if (validatedData.newPassword) {
+        if (!validatedData.currentPassword) {
+          return res.status(400).json({ message: "Current password is required to set new password" });
+        }
+
+        const isCurrentPasswordValid = await user.comparePassword(validatedData.currentPassword);
+        if (!isCurrentPasswordValid) {
+          return res.status(400).json({ message: "Current password is incorrect" });
+        }
+
+        user.password = validatedData.newPassword;
+      }
+
+      // Update other fields
+      if (validatedData.email) {
+        // Check if email is already taken by another user
+        const existingUser = await User.findOne({ 
+          email: validatedData.email, 
+          _id: { $ne: user._id } 
+        });
+        if (existingUser) {
+          return res.status(400).json({ message: "Email already taken by another user" });
+        }
+        user.email = validatedData.email;
+      }
+
+      if (validatedData.name) {
+        user.name = validatedData.name;
+      }
+
+      await user.save();
+
+      res.json({
+        message: "Profile updated successfully",
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        },
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      console.error("Profile update error:", error);
+      res.status(500).json({ message: "Failed to update profile" });
     }
   });
 
@@ -489,7 +622,7 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
   app.delete("/api/gallery/:id", async (req, res) => {
     try {
       const id = getId(req);
-      
+
       const gallery = await storage.getGalleryById(id);
       if (!gallery) {
         return res.status(404).json({ message: "Gallery item not found" });
@@ -521,7 +654,7 @@ app.post("/api/upload", upload.single("uploadFile"), async (req, res) => {
 
   try {
     const fileUrl = await uploadFile(req, folder);
-    
+
     if (!fileUrl) {
       return res.status(500).json({ message: "Failed to upload file" });
     }

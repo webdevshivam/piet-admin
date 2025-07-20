@@ -13,24 +13,24 @@ import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const [activeTab, setActiveTab] = useState("login");
+  const { login, register } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
     try {
-      // Use the login function from our context
-      await login(username, password);
-      // On success, the context will handle navigation
+      await login(email, password);
     } catch (err: any) {
-      // On failure, display the error message
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
@@ -39,7 +39,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-950">
-      <Card className="mx-auto max-w-sm">
+      <Card className="mx-auto max-w-sm w-full">
         <CardHeader>
           <CardTitle className="text-2xl">Admin Login</CardTitle>
           <CardDescription>
@@ -47,16 +47,16 @@ export default function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
+          <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                type="text"
-                placeholder="admin"
+                id="email"
+                type="email"
+                placeholder="admin@example.com"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting}
               />
             </div>
@@ -83,7 +83,7 @@ export default function Login() {
               {isSubmitting ? (
                 <LoadingSpinner className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              {isSubmitting ? "Signing In..." : "Sign In"}
+              Login
             </Button>
           </form>
         </CardContent>

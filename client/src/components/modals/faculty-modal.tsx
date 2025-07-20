@@ -157,20 +157,7 @@ export default function FacultyModal({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="facultyId"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label htmlFor="facultyId">Faculty ID</Label>
-                    <FormControl>
-                      <Input id="facultyId" placeholder="FAC001" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div>
               <FormField
                 control={form.control}
                 name="name"
@@ -288,8 +275,15 @@ export default function FacultyModal({
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Save Changes"}
+              <Button type="submit" disabled={mutation.isPending} className="relative">
+                {mutation.isPending && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-background border-t-transparent" />
+                  </div>
+                )}
+                <span className={mutation.isPending ? "opacity-0" : ""}>
+                  {mutation.isPending ? "Saving..." : "Save Changes"}
+                </span>
               </Button>
             </DialogFooter>
           </form>

@@ -92,17 +92,8 @@ export default function NewsModal({ isOpen, onClose, news }: NewsModalProps) {
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="newsId">News ID</Label>
-              <Input
-                id="newsId"
-                {...form.register("newsId")}
-                placeholder="NEWS001"
-              />
-            </div>
-            <div>
-              <Label htmlFor="importance">Importance</Label>
+          <div>
+            <Label htmlFor="importance">Importance</Label>
               <Select
                 value={form.watch("importance")}
                 onValueChange={(value) => form.setValue("importance", value)}

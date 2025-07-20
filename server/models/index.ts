@@ -1,11 +1,7 @@
 
 import mongoose, { Schema } from "mongoose";
 
-export const UserSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-}, { timestamps: true });
-export const UserModel = mongoose.models.User || mongoose.model("User", UserSchema);
+// User model moved to server/models/user.ts to avoid conflicts
 
 export const FacultySchema = new Schema({
   facultyId: { type: String, required: true, unique: true },

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, FileText, Download } from "lucide-react";
+import { Plus, Edit, Trash2, FileText } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import CellsModal from "@/components/modals/cells-modal";
@@ -56,14 +56,7 @@ export default function Cells() {
     setEditingCell(null);
   };
 
-  const handleDownload = (url: string, name: string) => {
-    if (url) {
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = name;
-      link.click();
-    }
-  };
+  
 
   if (isLoading) {
     return (
@@ -102,18 +95,16 @@ export default function Cells() {
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
                           <FileText className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm text-gray-600">
-                            {cell.name.toLowerCase().replace(/\s+/g, '_')}.pdf
-                          </span>
+                          <a 
+                            href={cell.pdfUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-600 hover:text-blue-800 underline"
+                          >
+                            View PDF Document
+                          </a>
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDownload(cell.pdfUrl!, `${cell.name}.pdf`)}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
                     </div>
                   )}
 

@@ -100,32 +100,22 @@ export default function IprModal({ isOpen, onClose, ipr }: IprModalProps) {
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* IPR ID and Year */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="iprId">IPR ID</Label>
-              <Input
-                id="iprId"
-                {...form.register("iprId")} // Bind the input field to the form
-                placeholder="IPR001"
-              />
-            </div>
-            <div>
-              <Label htmlFor="year">Year</Label>
-              <Select
-                value={form.watch("year")} // Watch the form value for 'year'
-                onValueChange={(value) => form.setValue("year", value)} // Update 'year' field
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map(year => (
-                    <SelectItem key={year} value={year}>{year}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Year */}
+          <div>
+            <Label htmlFor="year">Year</Label>
+            <Select
+              value={form.watch("year")} // Watch the form value for 'year'
+              onValueChange={(value) => form.setValue("year", value)} // Update 'year' field
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select year" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map(year => (
+                  <SelectItem key={year} value={year}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Grant No. and Affiliation */}

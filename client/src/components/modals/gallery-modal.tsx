@@ -127,33 +127,23 @@ export default function GalleryModal({ isOpen, onClose, item }: GalleryModalProp
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="galleryId">Gallery ID</Label>
-              <Input
-                id="galleryId"
-                {...form.register("galleryId")}
-                placeholder="GAL001"
-              />
-            </div>
-            <div>
-              <Label htmlFor="year">Year</Label>
-              <Select
-                value={form.watch("year")}
-                onValueChange={(value) => form.setValue("year", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div>
+            <Label htmlFor="year">Year</Label>
+            <Select
+              value={form.watch("year")}
+              onValueChange={(value) => form.setValue("year", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select year" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((year) => (
+                  <SelectItem key={year} value={year}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

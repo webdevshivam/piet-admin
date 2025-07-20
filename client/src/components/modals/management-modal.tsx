@@ -145,17 +145,8 @@ export default function ManagementModal({
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="managementId">Management ID</Label>
-              <Input
-                id="managementId"
-                {...form.register("managementId")}
-                placeholder="MGT001"
-              />
-            </div>
-            <div>
-              <Label htmlFor="name">Full Name</Label>
+          <div>
+            <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
                 {...form.register("name")}

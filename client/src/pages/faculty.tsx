@@ -12,14 +12,8 @@ import FacultyModal from "@/components/modals/faculty-modal";
 import type { Faculty } from "@shared/schema";
 
 export default function Faculty() {
+  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFaculty, setEditingFaculty] = useState<Faculty | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [departmentFilter, setDepartmentFilter] = useState("all");
-  const [designationFilter, setDesignationFilter] = useState("all");
-
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   const { data: faculty = [], isLoading } = useQuery({
     queryKey: ['/api/faculty'],
@@ -78,14 +72,17 @@ export default function Faculty() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading faculty data...</div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
+          <p className="text-muted-foreground">Loading faculty...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="space-y-6 animate-fade-in">
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-6">

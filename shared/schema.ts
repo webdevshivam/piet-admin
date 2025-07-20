@@ -1,11 +1,24 @@
 import mongoose, { Schema, model } from "mongoose";
+import { Types } from "mongoose";
 import { z } from "zod";
 
-// Zod Schemas (for validation)
-export const insertUserSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+// User schemas
+export const loginUserSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(1, "Password is required"),
 });
+
+export const updateUserSchema = z.object({
+  email: z.string().email("Please enter a valid email").optional(),
+  name: z.string().min(2, "Name must be at least 2 characters").optional(),
+  currentPassword: z.string().optional(),
+  newPassword: z.string().min(6, "Password must be at least 6 characters").optional(),
+});
+
+export type LoginUser = z.infer<typeof loginUserSchema>;
+export type UpdateUser = z.infer<typeof updateUserSchema>;
+
+// User schemas moved to top of file to avoid duplication
 
 export const insertFacultySchema = z.object({
   facultyId: z.string(),
@@ -53,7 +66,7 @@ export const insertManagementTeamSchema = z.object({
 export const insertCellsCommitteesSchema = z.object({
   cellId: z.string(),
   name: z.string(),
-  pdfUrl: z.string().optional(),
+  pdfUrl: z.string().url("Please enter a valid URL"),
 });
 
 export const insertGallerySchema = z.object({
@@ -65,13 +78,7 @@ export const insertGallerySchema = z.object({
 });
 
 // Mongoose Schemas
-const userSchema = new Schema(
-  {
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-  },
-  { timestamps: true }
-);
+// User mongoose schema removed - using the one from server/models/user.ts
 
 const facultySchema = new Schema(
   {
@@ -135,7 +142,7 @@ const cellsCommitteesSchema = new Schema(
   {
     cellId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
-    pdfUrl: { type: String },
+    pdfUrl: { type: String, required: true },
   },
   { timestamps: { createdAt: "createdAt" } }
 );
@@ -157,7 +164,7 @@ function getOrCreateModel<T>(name: string, schema: mongoose.Schema<T>) {
 }
 
 // Mongoose Models (with overwrite check)
-export const UserModel = getOrCreateModel("User", userSchema);
+// UserModel removed - import from server/models/user.ts instead
 export const FacultyModel = getOrCreateModel("Faculty", facultySchema);
 export const BannerModel = getOrCreateModel("Banner", bannerSchema);
 export const NewsModel = getOrCreateModel("News", newsSchema);
@@ -167,7 +174,7 @@ export const CellsCommitteesModel = getOrCreateModel("CellsCommittees", cellsCom
 export const GalleryModel = getOrCreateModel("Gallery", gallerySchema);
 
 // Types (from Zod)
-export type User = mongoose.InferSchemaType<typeof userSchema>;
+// User type available from server/models/user.ts
 export type Faculty = mongoose.InferSchemaType<typeof facultySchema>;
 export type Banner = mongoose.InferSchemaType<typeof bannerSchema>;
 export type News = mongoose.InferSchemaType<typeof newsSchema>;
@@ -176,7 +183,6 @@ export type ManagementTeam = mongoose.InferSchemaType<typeof managementTeamSchem
 export type CellsCommittees = mongoose.InferSchemaType<typeof cellsCommitteesSchema>;
 export type Gallery = mongoose.InferSchemaType<typeof gallerySchema>;
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertFaculty = z.infer<typeof insertFacultySchema>;
 export type InsertBanner = z.infer<typeof insertBannerSchema>;
 export type InsertNews = z.infer<typeof insertNewsSchema>;
@@ -189,7 +195,7 @@ export type InsertGallery = z.infer<typeof insertGallerySchema>;
 export interface IStorage {
   getUser(id: string): Promise<User | null>;
   getUserByUsername(username: string): Promise<User | null>;
-  createUser(user: InsertUser): Promise<User>;
+  
 
   getFaculty(): Promise<Faculty[]>;
   getFacultyById(id: string): Promise<Faculty | null>;

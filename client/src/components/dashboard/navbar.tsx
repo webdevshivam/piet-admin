@@ -5,7 +5,6 @@ import {
   Home,
   Image,
   Menu,
-  Moon,
   Newspaper,
   Package2,
   Radio,
@@ -13,6 +12,8 @@ import {
   Sun,
   UserSquare,
   Users,
+  User,
+  LogOut
 } from "lucide-react";
 import { Link, useLocation } from "wouter"; // Import from wouter
 
@@ -118,13 +119,19 @@ export default function Navbar() {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <Link to="/profile">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          {/* Theme selection is now part of this dropdown */}
-
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={logout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

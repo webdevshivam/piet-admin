@@ -121,15 +121,6 @@ export default function BannerModal({ isOpen, onClose, banner }: BannerModalProp
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <Label htmlFor="bannerId">Banner ID</Label>
-            <Input
-              id="bannerId"
-              {...form.register("bannerId")}
-              placeholder="BAN001"
-            />
-          </div>
-
-          <div>
             <Label htmlFor="title">Banner Title</Label>
             <Input
               id="title"

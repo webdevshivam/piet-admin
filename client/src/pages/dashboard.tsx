@@ -34,7 +34,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div>
+    <div className="space-y-6 animate-fade-in">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="transition-all duration-300 hover:shadow-lg">
@@ -50,7 +50,7 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -64,7 +64,7 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -78,7 +78,7 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="card-hover transition-all duration-300 bg-gradient-to-br from-white to-green-50 dark:from-gray-800 dark:to-green-900/20 border-0 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -154,7 +154,7 @@ export default function Dashboard() {
             </button>
           </CardContent>
         </Card>
-        
+
         <Card className="card-hover transition-all duration-300 bg-gradient-to-br from-accent-50 to-accent-100 dark:from-accent-900/20 dark:to-accent-800/20 border-0 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
@@ -172,7 +172,7 @@ export default function Dashboard() {
             </button>
           </CardContent>
         </Card>
-        
+
         <Card className="card-hover transition-all duration-300 bg-gradient-to-br from-secondary-50 to-secondary-100 dark:from-secondary-900/20 dark:to-secondary-800/20 border-0 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
