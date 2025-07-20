@@ -23,6 +23,8 @@ async function buildServer() {
         'cors',
         'multer',
         'cloudinary',
+        'lightningcss',
+        '@tailwindcss/oxide',
       ],
       format: 'cjs',
     });

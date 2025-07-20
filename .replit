@@ -23,3 +23,9 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
+
+[env]
+PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
+npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
+REPLIT_KEEP_PACKAGE_DEV_DEPENDENCIES = "1"
+REPLIT_DISABLE_PACKAGE_LAYER = "1"
