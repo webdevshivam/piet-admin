@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(247, 37%, 29%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(0, 100%, 40%);
+  --secondary-foreground: hsl(60, 9.1%, 97.8%);
+  --accent: hsl(48, 100%, 50%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+
+  /* Custom colors for the dashboard */
+  --primary-50: hsl(247, 37%, 95%);
+  --primary-100: hsl(247, 37%, 90%);
+  --primary-200: hsl(247, 37%, 80%);
+  --primary-800: hsl(247, 37%, 20%);
+  --primary-900: hsl(247, 37%, 29%);
+
+  --secondary-50: hsl(0, 100%, 95%);
+  --secondary-100: hsl(0, 100%, 90%);
+  --secondary-600: hsl(0, 100%, 40%);
+  --secondary-700: hsl(0, 100%, 35%);
+
+  --accent-50: hsl(48, 100%, 95%);
+  --accent-100: hsl(48, 100%, 90%);
+  --accent-500: hsl(48, 100%, 50%);
+  --accent-600: hsl(48, 100%, 45%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(247, 37%, 35%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(0, 100%, 45%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(48, 100%, 55%);
+  --accent-foreground: hsl(240, 10%, 3.9%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+
+  /* Custom dark mode colors */
+  --primary-50: hsl(247, 37%, 15%);
+  --primary-100: hsl(247, 37%, 20%);
+  --primary-200: hsl(247, 37%, 25%);
+  --primary-800: hsl(247, 37%, 45%);
+  --primary-900: hsl(247, 37%, 35%);
+
+  --secondary-50: hsl(0, 100%, 15%);
+  --secondary-100: hsl(0, 100%, 20%);
+  --secondary-600: hsl(0, 100%, 45%);
+  --secondary-700: hsl(0, 100%, 50%);
+
+  --accent-50: hsl(48, 100%, 15%);
+  --accent-100: hsl(48, 100%, 20%);
+  --accent-500: hsl(48, 100%, 55%);
+  --accent-600: hsl(48, 100%, 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .sidebar-transition {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+  }
+
+  .drag-item {
+    cursor: move;
+  }
+
+  .drag-item:hover {
+    opacity: 0.8;
+  }
+
+  .modal-overlay {
+    backdrop-filter: blur(4px);
+  }
+
+  .text-primary-900 {
+    color: var(--primary-900);
+  }
+
+  .bg-primary-900 {
+    background-color: var(--primary-900);
+  }
+
+  .bg-primary-800 {
+    background-color: var(--primary-800);
+  }
+
+  .bg-primary-100 {
+    background-color: var(--primary-100);
+  }
+
+  .bg-secondary-600 {
+    background-color: var(--secondary-600);
+  }
+
+  .bg-secondary-100 {
+    background-color: var(--secondary-100);
+  }
+
+  .bg-accent-500 {
+    background-color: var(--accent-500);
+  }
+
+  .bg-accent-600 {
+    background-color: var(--accent-600);
+  }
+
+  .bg-accent-100 {
+    background-color: var(--accent-100);
+  }
+
+  .text-secondary-600 {
+    color: var(--secondary-600);
+  }
+
+  .text-accent-600 {
+    color: var(--accent-600);
+  }
+
+  .hover\:bg-primary-800:hover {
+    background-color: var(--primary-800);
+  }
+
+  .hover\:bg-secondary-700:hover {
+    background-color: var(--secondary-700);
+  }
+
+  .hover\:bg-accent-600:hover {
+    background-color: var(--accent-600);
+  }
+
+  .border-primary-800 {
+    border-color: var(--primary-800);
+  }
+
+  .focus\:ring-primary-500:focus {
+    --tw-ring-color: var(--primary);
+  }
+
+  .focus\:border-primary-500:focus {
+    border-color: var(--primary);
+  }
+}
