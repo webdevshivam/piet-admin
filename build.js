@@ -26,6 +26,7 @@ async function buildServer() {
         "cloudinary",
         "lightningcss",
         "@tailwindcss/oxide",
+        "dotenv",
         "fs",
         "path",
         "url",
