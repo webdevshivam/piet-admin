@@ -26,7 +26,7 @@ async function buildServer() {
         'lightningcss',
         '@tailwindcss/oxide',
       ],
-      format: 'cjs',
+      format: 'esm',
     });
 
     console.log('Server build completed successfully');
