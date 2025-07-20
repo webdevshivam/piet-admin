@@ -94,20 +94,19 @@ export default function NewsModal({ isOpen, onClose, news }: NewsModalProps) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="importance">Importance</Label>
-              <Select
-                value={form.watch("importance")}
-                onValueChange={(value) => form.setValue("importance", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select importance" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Select
+              value={form.watch("importance")}
+              onValueChange={(value) => form.setValue("importance", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select importance" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

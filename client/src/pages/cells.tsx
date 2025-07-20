@@ -51,6 +51,12 @@ export default function Cells() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this cell/committee?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingCell(null);

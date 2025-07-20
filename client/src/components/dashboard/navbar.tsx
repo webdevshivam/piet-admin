@@ -42,6 +42,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { useTheme } from "@/contexts/theme-context"; // Import useTheme
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { TopLoadingBar } from "@/components/ui/top-loading-bar";
 
 export default function Navbar() {
   const { logout } = useAuth();
@@ -60,7 +61,9 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <>
+      <TopLoadingBar />
+      <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -109,6 +112,7 @@ export default function Navbar() {
 
         </form>
       </div>
+      <ThemeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
@@ -135,5 +139,6 @@ export default function Navbar() {
         </DropdownMenuContent>
       </DropdownMenu>
     </header>
+    </>
   );
 }

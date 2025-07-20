@@ -54,6 +54,12 @@ export default function Banner() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this banner?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingBanner(null);

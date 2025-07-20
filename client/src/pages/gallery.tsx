@@ -61,9 +61,9 @@ export default function Gallery() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (_id: string) => {
-    if (confirm("Are you sure you want to delete this gallery item?")) {
-      deleteMutation.mutate(_id);
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this image?")) {
+      deleteMutation.mutate(id);
     }
   };
 

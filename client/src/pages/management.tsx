@@ -51,6 +51,12 @@ export default function Management() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this management team member?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingMember(null);

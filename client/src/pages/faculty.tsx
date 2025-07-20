@@ -14,16 +14,22 @@ import type { Faculty } from "@shared/schema";
 export default function Faculty() {
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("all");
+  const [designationFilter, setDesignationFilter] = useState("all");
+  const [editingFaculty, setEditingFaculty] = useState<Faculty | null>(null);
+
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: faculty = [], isLoading } = useQuery({
     queryKey: ['/api/faculty'],
-
+    queryFn: () => apiRequest('GET', '/api/faculty'),
   });
 
   console.log("Fetched faculty data:", faculty);
 
   const deleteMutation = useMutation({
-
     mutationFn: async (id: string) => {
       await apiRequest('DELETE', `/api/faculty/${id}`);
     },
@@ -58,10 +64,8 @@ export default function Faculty() {
   };
 
   const handleDelete = (id: string) => {
-
-    if (confirm("Are you sure you want to delete this faculty member?")) {
+    if (window.confirm("Are you sure you want to delete this faculty member?")) {
       deleteMutation.mutate(id);
-
     }
   };
 

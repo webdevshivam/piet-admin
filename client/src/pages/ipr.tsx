@@ -64,6 +64,12 @@ export default function Ipr() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this IPR?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingIpr(null);

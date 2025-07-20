@@ -63,6 +63,12 @@ export default function News() {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this news item?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingNews(null);
