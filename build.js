@@ -1,37 +1,38 @@
-import { build } from 'esbuild';
-import { copyFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { build } from "esbuild";
+import { copyFileSync, mkdirSync } from "fs";
+import { join } from "path";
 
+console.log("Building server...");
 async function buildServer() {
   try {
     // Ensure dist directory exists
-    mkdirSync('dist', { recursive: true });
-    mkdirSync('dist/server', { recursive: true });
+    mkdirSync("dist", { recursive: true });
+    mkdirSync("dist/server", { recursive: true });
 
     // Build server with esbuild
     await build({
-      entryPoints: ['server/index.ts'],
+      entryPoints: ["server/index.ts"],
       bundle: true,
-      platform: 'node',
-      target: 'node18',
-      outfile: 'dist/server/index.js',
+      platform: "node",
+      target: "node18",
+      outfile: "dist/server/index.js",
       external: [
-        'express',
-        'mongoose',
-        'bcryptjs',
-        'jsonwebtoken',
-        'cors',
-        'multer',
-        'cloudinary',
-        'lightningcss',
-        '@tailwindcss/oxide',
+        "express",
+        "mongoose",
+        "bcryptjs",
+        "jsonwebtoken",
+        "cors",
+        "multer",
+        "cloudinary",
+        "lightningcss",
+        "@tailwindcss/oxide",
       ],
-      format: 'esm',
+      format: "esm",
     });
 
-    console.log('Server build completed successfully');
+    console.log("Server build completed successfully");
   } catch (error) {
-    console.error('Build failed:', error);
+    console.error("Build failed:", error);
     process.exit(1);
   }
 }
