@@ -25,7 +25,6 @@ import {
   insertManagementTeamSchema,
   insertCellsCommitteesSchema,
   insertGallerySchema,
-  registerUserSchema,
   loginUserSchema,
   updateUserSchema,
 } from "@shared/schema";
@@ -41,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return req.params.id; // IDs are strings like "6876073fc80381755fbb6aaa"
   }
 
-    
+
 
   // User login
   app.post("/api/login", async (req, res) => {
@@ -146,9 +145,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update other fields
       if (validatedData.email) {
         // Check if email is already taken by another user
-        const existingUser = await User.findOne({ 
-          email: validatedData.email, 
-          _id: { $ne: user._id } 
+        const existingUser = await User.findOne({
+          email: validatedData.email,
+          _id: { $ne: user._id }
         });
         if (existingUser) {
           return res.status(400).json({ message: "Email already taken by another user" });
