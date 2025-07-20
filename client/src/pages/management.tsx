@@ -16,8 +16,15 @@ export default function Management() {
   const queryClient = useQueryClient();
 
   const { data: managementData = [], isLoading } = useQuery({
-    queryKey: ['/api/managementteam']
+    queryKey: ['/api/managementteam'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/managementteam');
+      return response.json();
+    },
   });
+
+  // Ensure managementData is always an array
+  const managementArray = Array.isArray(managementData) ? managementData : [];
 
 
   const deleteMutation = useMutation({
@@ -43,12 +50,6 @@ export default function Management() {
   const handleEdit = (member: ManagementTeam) => {
     setEditingMember(member);
     setIsModalOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this management team member?")) {
-      deleteMutation.mutate(id);
-    }
   };
 
   const handleDelete = (id: string) => {
@@ -94,7 +95,7 @@ export default function Management() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {managementData.map((member: ManagementTeam) => (
+            {managementArray.map((member: ManagementTeam) => (
               <Card key={member._id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4 mb-4">
@@ -110,7 +111,7 @@ export default function Management() {
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 mb-4">
-                    <p>ID: {member.managementId ?? "N/A"}</p>
+                    <p>ID: {member.managementId ?? member._id}</p>
                     <p>Mobile: {member.mobileNo ?? "N/A"}</p>
                   </div>
                   <div className="flex justify-end space-x-2">
@@ -134,7 +135,7 @@ export default function Management() {
             ))}
           </div>
 
-          {managementData.length === 0 && (
+          {managementArray.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               No management team members found
             </div>

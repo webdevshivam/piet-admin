@@ -20,10 +20,16 @@ export default function Gallery() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: gallery = [], isLoading } = useQuery({
+  const { data: gallery = [], isLoading, error } = useQuery({
     queryKey: ["/api/gallery"],
-
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/gallery");
+      return response.json();
+    },
   });
+
+  // Ensure gallery is always an array before filtering
+  const galleryArray = Array.isArray(gallery) ? gallery : [];
 
   const deleteMutation = useMutation({
     mutationFn: async (_id: string) => {
@@ -45,7 +51,7 @@ export default function Gallery() {
     },
   });
 
-  const filteredGallery = gallery.filter((item: Gallery) => {
+  const filteredGallery = galleryArray.filter((item: Gallery) => {
     const matchesSearch =
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.galleryId.toLowerCase().includes(searchTerm.toLowerCase());
@@ -158,7 +164,7 @@ export default function Gallery() {
                   <h4 className="font-medium text-gray-900 mb-1 truncate">{item.title}</h4>
                   <p className="text-sm text-gray-600 mb-2">{item.year} • {item.category}</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">{item.galleryId}</span>
+                    <span className="text-xs text-gray-500">{item.galleryId || item._id}</span>
                     <div className="flex space-x-2">
                       <Button
                         variant="ghost"

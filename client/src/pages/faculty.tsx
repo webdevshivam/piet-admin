@@ -22,9 +22,12 @@ export default function Faculty() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: faculty = [], isLoading } = useQuery({
+  const { data: faculty = [], isLoading, error } = useQuery({
     queryKey: ['/api/faculty'],
-    queryFn: () => apiRequest('GET', '/api/faculty'),
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/faculty');
+      return response.json();
+    },
   });
 
   console.log("Fetched faculty data:", faculty);
@@ -49,9 +52,12 @@ export default function Faculty() {
     },
   });
 
-  const filteredFaculty = faculty.filter((member: Faculty) => {
+  // Ensure faculty is always an array before filtering
+  const facultyArray = Array.isArray(faculty) ? faculty : [];
+  
+  const filteredFaculty = facultyArray.filter((member: Faculty) => {
     const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.facultyId.toLowerCase().includes(searchTerm.toLowerCase());
+      (member.facultyId && member.facultyId.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesDepartment = departmentFilter === "all" || member.department === departmentFilter;
     const matchesDesignation = designationFilter === "all" || member.designation === designationFilter;
 
@@ -80,6 +86,17 @@ export default function Faculty() {
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
           <p className="text-muted-foreground">Loading faculty...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <p className="text-red-500">Error loading faculty data</p>
+          <p className="text-muted-foreground">Please try refreshing the page</p>
         </div>
       </div>
     );
@@ -166,7 +183,7 @@ export default function Faculty() {
                         <div className="w-10 h-10 rounded-full bg-gray-200" />
                       )}
                     </TableCell>
-                    <TableCell className="font-medium">{member.facultyId}</TableCell>
+                    <TableCell className="font-medium">{member.facultyId || member._id}</TableCell>
                     <TableCell>{member.name}</TableCell>
                     <TableCell>{member.department}</TableCell>
                     <TableCell>{member.designation}</TableCell>

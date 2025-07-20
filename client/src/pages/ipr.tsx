@@ -20,9 +20,16 @@ export default function Ipr() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: ipr = [], isLoading } = useQuery({
+  const { data: ipr = [], isLoading, error } = useQuery({
     queryKey: ['/api/ipr'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/ipr');
+      return response.json();
+    },
   });
+
+  // Ensure ipr is always an array before filtering
+  const iprArray = Array.isArray(ipr) ? ipr : [];
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -44,7 +51,7 @@ export default function Ipr() {
     },
   });
 
-  const filteredIpr = ipr.filter((item: Ipr) => {
+  const filteredIpr = iprArray.filter((item: Ipr) => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.iprId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.grantNo.toLowerCase().includes(searchTerm.toLowerCase());
@@ -56,12 +63,6 @@ export default function Ipr() {
   const handleEdit = (ipr: Ipr) => {
     setEditingIpr(ipr);
     setIsModalOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this IPR?")) {
-      deleteMutation.mutate(id);
-    }
   };
 
   const handleDelete = (id: string) => {
@@ -140,9 +141,9 @@ export default function Ipr() {
               </TableHeader>
               <TableBody>
                 {filteredIpr.map((item: Ipr) => (
-                  <TableRow key={item.id}>
+                  <TableRow key={item._id}>
                     <TableCell>{item.year}</TableCell>
-                    <TableCell className="font-medium">{item.iprId}</TableCell>
+                    <TableCell className="font-medium">{item.iprId || item._id}</TableCell>
                     <TableCell>{item.grantNo}</TableCell>
                     <TableCell>{item.affiliation}</TableCell>
                     <TableCell className="max-w-xs truncate">{item.title}</TableCell>

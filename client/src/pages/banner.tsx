@@ -18,9 +18,16 @@ export default function Banner() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: banners = [], isLoading } = useQuery({
+  const { data: banners = [], isLoading, error } = useQuery({
     queryKey: ['/api/banners'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/banners');
+      return response.json();
+    },
   });
+
+  // Ensure banners is always an array before filtering
+  const bannersArray = Array.isArray(banners) ? banners : [];
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -45,13 +52,6 @@ export default function Banner() {
   const handleEdit = (banner: Banner) => {
     setEditingBanner(banner);
     setIsModalOpen(true);
-  };
-
-  const handleDelete = (id: string) => {
-
-    if (confirm("Are you sure you want to delete this banner?")) {
-      deleteMutation.mutate(id);
-    }
   };
 
   const handleDelete = (id: string) => {
@@ -128,7 +128,7 @@ export default function Banner() {
                         )}
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900">{banner.bannerId}</h4>
+                        <h4 className="font-medium text-gray-900">{banner.bannerId || banner._id}</h4>
                         <p className="text-sm text-gray-600">Priority: {banner.priority}</p>
                         <p className="text-xs text-gray-500">{banner.title}</p>
                       </div>

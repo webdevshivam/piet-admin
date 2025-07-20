@@ -21,7 +21,8 @@ export type UpdateUser = z.infer<typeof updateUserSchema>;
 // User schemas moved to top of file to avoid duplication
 
 export const insertFacultySchema = z.object({
-  facultyId: z.string(),
+  _id: z.string().optional(),
+  facultyId: z.string().optional(),
   name: z.string(),
   department: z.string(),
   designation: z.string(),
@@ -32,7 +33,8 @@ export const insertFacultySchema = z.object({
 
 
 export const insertBannerSchema = z.object({
-  bannerId: z.string(),
+  _id: z.string().optional(),
+  bannerId: z.string().optional(),
   title: z.string(),
   imageUrl: z.string(),
   priority: z.number(),
@@ -40,7 +42,8 @@ export const insertBannerSchema = z.object({
 });
 
 export const insertNewsSchema = z.object({
-  newsId: z.string(),
+  _id: z.string().optional(),
+  newsId: z.string().optional(),
   title: z.string(),
   description: z.string(),
   importance: z.string(),
@@ -48,7 +51,8 @@ export const insertNewsSchema = z.object({
 });
 
 export const insertIprSchema = z.object({
-  iprId: z.string(),
+  _id: z.string().optional(),
+  iprId: z.string().optional(),
   year: z.string(),
   grantNo: z.string(),
   affiliation: z.string(),
@@ -56,7 +60,8 @@ export const insertIprSchema = z.object({
 });
 
 export const insertManagementTeamSchema = z.object({
-  managementId: z.string(),
+  _id: z.string().optional(),
+  managementId: z.string().optional(),
   name: z.string(),
   branch: z.string(),
   designation: z.string(),
@@ -64,13 +69,15 @@ export const insertManagementTeamSchema = z.object({
 });
 
 export const insertCellsCommitteesSchema = z.object({
-  cellId: z.string(),
+  _id: z.string().optional(),
+  cellId: z.string().optional(),
   name: z.string(),
   pdfUrl: z.string().url("Please enter a valid URL"),
 });
 
 export const insertGallerySchema = z.object({
-  galleryId: z.string(),
+  _id: z.string().optional(),
+  galleryId: z.string().optional(),
   year: z.string(),
   category: z.string(),
   title: z.string(),
@@ -82,7 +89,7 @@ export const insertGallerySchema = z.object({
 
 const facultySchema = new Schema(
   {
-    facultyId: { type: String, required: true, unique: true },
+    facultyId: { type: String, required: false, unique: true, sparse: true },
     name: { type: String, required: true },
     department: { type: String, required: true },
     designation: { type: String, required: true },
@@ -95,7 +102,7 @@ const facultySchema = new Schema(
 
 const bannerSchema = new Schema(
   {
-    bannerId: { type: String, required: true, unique: true },
+    bannerId: { type: String, required: false, unique: true, sparse: true },
     title: { type: String, required: true },
     imageUrl: { type: String, required: true },
     priority: { type: Number, required: true },
@@ -106,7 +113,7 @@ const bannerSchema = new Schema(
 
 const newsSchema = new Schema(
   {
-    newsId: { type: String, required: true, unique: true },
+    newsId: { type: String, required: false, unique: true, sparse: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     importance: { type: String, required: true },
@@ -118,7 +125,7 @@ const newsSchema = new Schema(
 
 const iprSchema = new Schema(
   {
-    iprId: { type: String, required: true, unique: true },
+    iprId: { type: String, required: false, unique: true, sparse: true },
     year: { type: String, required: true },
     grantNo: { type: String, required: true },
     affiliation: { type: String, required: true },
@@ -129,7 +136,7 @@ const iprSchema = new Schema(
 
 const managementTeamSchema = new Schema(
   {
-    managementId: { type: String, required: true, unique: true },
+    managementId: { type: String, required: false, unique: true, sparse: true },
     name: { type: String, required: true },
     branch: { type: String, required: true },
     designation: { type: String, required: true },
@@ -140,7 +147,7 @@ const managementTeamSchema = new Schema(
 
 const cellsCommitteesSchema = new Schema(
   {
-    cellId: { type: String, required: true, unique: true },
+    cellId: { type: String, required: false, unique: true, sparse: true },
     name: { type: String, required: true },
     pdfUrl: { type: String, required: true },
   },
@@ -149,7 +156,7 @@ const cellsCommitteesSchema = new Schema(
 
 const gallerySchema = new Schema(
   {
-    galleryId: { type: String, required: true, unique: true },
+    galleryId: { type: String, required: false, unique: true, sparse: true },
     year: { type: String, required: true },
     category: { type: String, required: true },
     title: { type: String, required: true },

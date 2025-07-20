@@ -20,9 +20,16 @@ export default function News() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: news = [], isLoading } = useQuery({
+  const { data: news = [], isLoading, error } = useQuery({
     queryKey: ['/api/news'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/news');
+      return response.json();
+    },
   });
+
+  // Ensure news is always an array before filtering
+  const newsArray = Array.isArray(news) ? news : [];
 
   const deleteMutation = useMutation({
     mutationFn: async (_id: string) => {
@@ -44,7 +51,7 @@ export default function News() {
     },
   });
 
-  const filteredNews = news.filter((item: News) => {
+  const filteredNews = newsArray.filter((item: News) => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesImportance = importanceFilter === "all" || item.importance === importanceFilter;
@@ -55,12 +62,6 @@ export default function News() {
   const handleEdit = (news: News) => {
     setEditingNews(news);
     setIsModalOpen(true);
-  };
-
-  const handleDelete = (_id: string) => {
-    if (confirm("Are you sure you want to delete this news/notice?")) {
-      deleteMutation.mutate(_id);
-    }
   };
 
   const handleDelete = (id: string) => {
@@ -140,7 +141,7 @@ export default function News() {
               <Card key={item._id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-gray-500">{item.newsId}</span>
+                    <span className="text-xs font-medium text-gray-500">{item.newsId || item._id}</span>
                     {getImportanceBadge(item.importance)}
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>

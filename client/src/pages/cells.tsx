@@ -15,10 +15,16 @@ export default function Cells() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: cells = [], isLoading } = useQuery({
+  const { data: cells = [], isLoading, error } = useQuery({
     queryKey: ['/api/cellscommittees'],
-
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/cellscommittees');
+      return response.json();
+    },
   });
+
+  // Ensure cells is always an array
+  const cellsArray = Array.isArray(cells) ? cells : [];
 
   const deleteMutation = useMutation({
     mutationFn: async (_id: string) => {
@@ -45,12 +51,6 @@ export default function Cells() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (_id: string) => {
-    if (confirm("Are you sure you want to delete this cell/committee?")) {
-      deleteMutation.mutate(_id);
-    }
-  };
-
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this cell/committee?")) {
       deleteMutation.mutate(id);
@@ -62,7 +62,7 @@ export default function Cells() {
     setEditingCell(null);
   };
 
-  
+
 
   if (isLoading) {
     return (
@@ -88,12 +88,12 @@ export default function Cells() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {cells.map((cell: CellsCommittees) => (
+            {cellsArray.map((cell: CellsCommittees) => (
               <Card key={cell._id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="font-semibold text-gray-900">{cell.name}</h4>
-                    <span className="text-xs font-medium text-gray-500">{cell.cellId}</span>
+                    <span className="text-xs font-medium text-gray-500">{cell.cellId || cell._id}</span>
                   </div>
 
                   {cell.pdfUrl && (
@@ -135,7 +135,7 @@ export default function Cells() {
             ))}
           </div>
 
-          {cells.length === 0 && (
+          {cellsArray.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               No cells or committees found
             </div>

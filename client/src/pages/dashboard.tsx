@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, Image, Newspaper, Camera } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 interface DashboardStats {
   faculty: number;
@@ -12,18 +13,34 @@ interface DashboardStats {
 export default function Dashboard() {
   const { data: facultyData = [] } = useQuery({
     queryKey: ['/api/faculty'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/faculty');
+      return response.json();
+    },
   });
 
   const { data: bannersData = [] } = useQuery({
     queryKey: ['/api/banners'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/banners');
+      return response.json();
+    },
   });
 
   const { data: newsData = [] } = useQuery({
     queryKey: ['/api/news'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/news');
+      return response.json();
+    },
   });
 
   const { data: galleryData = [] } = useQuery({
     queryKey: ['/api/gallery'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/gallery');
+      return response.json();
+    },
   });
 
   const stats: DashboardStats = {
@@ -109,8 +126,8 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="space-y-4">
-            {newsData.slice(0, 3).map((item: any, index: number) => (
-              <div key={item.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors animate-slideIn" style={{animationDelay: `${index * 200}ms`}}>
+            {Array.isArray(newsData) && newsData.slice(0, 3).map((item: any, index: number) => (
+              <div key={item._id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors animate-slideIn" style={{animationDelay: `${index * 200}ms`}}>
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg">
                   <Newspaper className="w-5 h-5 text-white" />
                 </div>
@@ -123,7 +140,7 @@ export default function Dashboard() {
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               </div>
             ))}
-            {newsData.length === 0 && (
+            {(!Array.isArray(newsData) || newsData.length === 0) && (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Newspaper className="w-8 h-8 text-gray-400" />

@@ -54,16 +54,17 @@ export function ThemeProvider({
       
       mediaQuery.addEventListener("change", handleChange);
       return () => mediaQuery.removeEventListener("change", handleChange);
+    } else {
+      root.classList.add(theme);
     }
-
-    root.classList.add(theme);
   }, [theme]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: (newTheme: Theme) => {
+      console.log("Setting theme to:", newTheme);
+      localStorage.setItem(storageKey, newTheme);
+      setTheme(newTheme);
     },
   };
 
