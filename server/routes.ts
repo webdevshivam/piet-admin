@@ -192,15 +192,20 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
   try {
     const imageUrl = req.file ? await uploadFile(req, "faculty") : null;
 
-    const validatedData = insertFacultySchema.parse({
+    // Generate a unique facultyId if not provided
+    const facultyData = {
       ...req.body,
+      facultyId: req.body.facultyId || randomUUID(),
       imageUrl: imageUrl,
-    });
+    };
+
+    const validatedData = insertFacultySchema.parse(facultyData);
 
     const faculty = await storage.createFaculty(validatedData);
     return res.status(201).json(faculty);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error("❌ Faculty validation errors:", error.errors);
       return res
         .status(400)
         .json({ message: "Invalid data", errors: error.errors });
@@ -289,6 +294,7 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
       // Convert FormData string values to proper types
       const processedData = {
         ...req.body,
+        bannerId: req.body.bannerId || randomUUID(),
         priority: parseInt(req.body.priority) || 1,
         isActive: req.body.isActive === 'true',
         imageUrl: imageUrl || req.body.imageUrl || "",
@@ -306,7 +312,10 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
         console.error("❌ POST banner error:", error);
-        res.status(500).json({ message: "Failed to create banner" });
+        res.status(500).json({ 
+          message: "Failed to create banner",
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
   });
@@ -441,14 +450,25 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
   });
   app.post("/api/ipr", async (req, res) => {
     try {
-      const validatedData = insertIprSchema.parse(req.body);
+      // Generate a unique iprId if not provided
+      const iprData = {
+        ...req.body,
+        iprId: req.body.iprId || randomUUID()
+      };
+      
+      const validatedData = insertIprSchema.parse(iprData);
       const ipr = await storage.createIpr(validatedData);
       res.status(201).json(ipr);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("❌ IPR validation errors:", error.errors);
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Failed to create IPR" });
+        console.error("❌ POST IPR error:", error);
+        res.status(500).json({ 
+          message: "Failed to create IPR",
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
   });
@@ -487,14 +507,25 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
   });
   app.post("/api/managementteam", async (req, res) => {
     try {
-      const validatedData = insertManagementTeamSchema.parse(req.body);
+      // Generate a unique managementId if not provided
+      const managementData = {
+        ...req.body,
+        managementId: req.body.managementId || randomUUID()
+      };
+      
+      const validatedData = insertManagementTeamSchema.parse(managementData);
       const management = await storage.createManagementTeam(validatedData);
       res.status(201).json(management);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("❌ Management Team validation errors:", error.errors);
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Failed to create management team member" });
+        console.error("❌ POST Management Team error:", error);
+        res.status(500).json({ 
+          message: "Failed to create management team member",
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
   });
@@ -533,14 +564,25 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
   });
   app.post("/api/cellscommittees", async (req, res) => {
     try {
-      const validatedData = insertCellsCommitteesSchema.parse(req.body);
+      // Generate a unique cellId if not provided
+      const cellData = {
+        ...req.body,
+        cellId: req.body.cellId || randomUUID()
+      };
+      
+      const validatedData = insertCellsCommitteesSchema.parse(cellData);
       const cell = await storage.createCellsCommittees(validatedData);
       res.status(201).json(cell);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("❌ Cells & Committees validation errors:", error.errors);
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Failed to create cell/committee" });
+        console.error("❌ POST Cells & Committees error:", error);
+        res.status(500).json({ 
+          message: "Failed to create cell/committee",
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
   });
@@ -581,19 +623,27 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
     try {
       const imageUrl = req.file ? await uploadFile(req, "gallery") : null;
 
-      const validatedData = insertGallerySchema.parse({
+      // Generate a unique galleryId if not provided
+      const galleryData = {
         ...req.body,
+        galleryId: req.body.galleryId || randomUUID(),
         imageUrl: imageUrl,
-      });
+      };
+
+      const validatedData = insertGallerySchema.parse(galleryData);
 
       const gallery = await storage.createGallery(validatedData);
       res.status(201).json(gallery);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("❌ Gallery validation errors:", error.errors);
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
         console.error("❌ POST gallery error:", error);
-        res.status(500).json({ message: "Failed to create gallery item" });
+        res.status(500).json({ 
+          message: "Failed to create gallery item",
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
   });
