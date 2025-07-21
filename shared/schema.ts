@@ -84,6 +84,21 @@ export const insertGallerySchema = z.object({
   imageUrl: z.string(),
 });
 
+export const insertAlumniSchema = z.object({
+  _id: z.string().optional(),
+  alumniId: z.string().optional(),
+  name: z.string().min(1, "Name is required"),
+  batch: z.string().min(1, "Batch year is required"),
+  fromCity: z.string().min(1, "Hometown is required"),
+  currentCity: z.string().min(1, "Current city is required"),
+  companyName: z.string().min(1, "Company name is required"),
+  position: z.string().min(1, "Position is required"),
+  email: z.string().email("Valid email is required"),
+  phone: z.string().min(1, "Phone number is required"),
+  achievements: z.string().optional(),
+  photoUrl: z.string().optional(),
+});
+
 // Mongoose Schemas
 // User mongoose schema removed - using the one from server/models/user.ts
 
@@ -165,6 +180,23 @@ const gallerySchema = new Schema(
   { timestamps: { createdAt: "createdAt" } }
 );
 
+const alumniSchema = new Schema(
+  {
+    alumniId: { type: String, required: false, unique: true, sparse: true },
+    name: { type: String, required: true },
+    batch: { type: String, required: true },
+    fromCity: { type: String, required: true },
+    currentCity: { type: String, required: true },
+    companyName: { type: String, required: true },
+    position: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phone: { type: String, required: true },
+    achievements: { type: String, required: false },
+    photoUrl: { type: String, required: false },
+  },
+  { timestamps: { createdAt: "createdAt" } }
+);
+
 // Helper to get existing model or create it (safe to use in hot reload envs)
 function getOrCreateModel<T>(name: string, schema: mongoose.Schema<T>) {
   return mongoose.models?.[name] || mongoose.model<T>(name, schema);
@@ -179,6 +211,7 @@ export const IprModel = getOrCreateModel("Ipr", iprSchema);
 export const ManagementTeamModel = getOrCreateModel("ManagementTeam", managementTeamSchema);
 export const CellsCommitteesModel = getOrCreateModel("CellsCommittees", cellsCommitteesSchema);
 export const GalleryModel = getOrCreateModel("Gallery", gallerySchema);
+export const AlumniModel = getOrCreateModel("Alumni", alumniSchema);
 
 // Types (from Zod)
 // User type available from server/models/user.ts
@@ -189,6 +222,7 @@ export type Ipr = mongoose.InferSchemaType<typeof iprSchema>;
 export type ManagementTeam = mongoose.InferSchemaType<typeof managementTeamSchema>;
 export type CellsCommittees = mongoose.InferSchemaType<typeof cellsCommitteesSchema>;
 export type Gallery = mongoose.InferSchemaType<typeof gallerySchema>;
+export type Alumni = mongoose.InferSchemaType<typeof alumniSchema>;
 
 export type InsertFaculty = z.infer<typeof insertFacultySchema>;
 export type InsertBanner = z.infer<typeof insertBannerSchema>;
@@ -197,6 +231,7 @@ export type InsertIpr = z.infer<typeof insertIprSchema>;
 export type InsertManagementTeam = z.infer<typeof insertManagementTeamSchema>;
 export type InsertCellsCommittees = z.infer<typeof insertCellsCommitteesSchema>;
 export type InsertGallery = z.infer<typeof insertGallerySchema>;
+export type InsertAlumni = z.infer<typeof insertAlumniSchema>;
 
 // Storage interface
 export interface IStorage {
@@ -246,4 +281,10 @@ export interface IStorage {
   createGallery(item: InsertGallery): Promise<Gallery>;
   updateGallery(id: string, item: Partial<InsertGallery>): Promise<Gallery | null>;
   deleteGallery(id: string): Promise<void>;
+
+  getAlumni(): Promise<Alumni[]>;
+  getAlumniById(id: string): Promise<Alumni | null>;
+  createAlumni(alumni: InsertAlumni): Promise<Alumni>;
+  updateAlumni(id: string, alumni: Partial<InsertAlumni>): Promise<Alumni | null>;
+  deleteAlumni(id: string): Promise<void>;
 }

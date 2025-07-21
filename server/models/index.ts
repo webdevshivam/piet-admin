@@ -65,3 +65,18 @@ export const GallerySchema = new Schema({
   imageUrl: { type: String, required: true },
 }, { timestamps: { createdAt: "createdAt" } });
 export const GalleryModel = mongoose.models.Gallery || mongoose.model("Gallery", GallerySchema);
+
+export const AlumniSchema = new Schema({
+  alumniId: { type: String, required: false, unique: true, sparse: true },
+  name: { type: String, required: true },
+  batch: { type: String, required: true },
+  fromCity: { type: String, required: true },
+  currentCity: { type: String, required: true },
+  companyName: { type: String, required: true },
+  position: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  achievements: { type: String, required: false },
+  photoUrl: { type: String, required: false },
+}, { timestamps: { createdAt: "createdAt" } });
+export const AlumniModel = mongoose.models.Alumni || mongoose.model("Alumni", AlumniSchema);

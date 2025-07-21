@@ -25,11 +25,12 @@ import {
   insertManagementTeamSchema,
   insertCellsCommitteesSchema,
   insertGallerySchema,
+  insertAlumniSchema,
   loginUserSchema,
   updateUserSchema,
 } from "@shared/schema";
 import { z } from "zod";
-import { FacultyModel, BannerModel, NewsModel, IprModel, ManagementTeamModel, CellsCommitteesModel, GalleryModel } from "./models/index";
+import { FacultyModel, BannerModel, NewsModel, IprModel, ManagementTeamModel, CellsCommitteesModel, GalleryModel, AlumniModel } from "./models/index";
 import { User } from "./models/user";
 import jwt from "jsonwebtoken";
 import validator from "validator";
@@ -703,6 +704,103 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
 
 
 
+
+// Alumni
+  app.get("/api/alumni", async (req, res) => {
+    try {
+      const alumni = await storage.getAlumni();
+      res.json(alumni);
+    } catch (error) {
+      console.error("❌ GET alumni error:", error);
+      res.status(500).json({ message: "Failed to fetch alumni" });
+    }
+  });
+
+  app.post("/api/alumni", upload.single("photo"), async (req, res) => {
+    try {
+      const photoUrl = req.file ? await uploadFile(req, "alumni") : null;
+
+      // Generate a unique alumniId if not provided
+      const alumniData = {
+        ...req.body,
+        alumniId: req.body.alumniId || randomUUID(),
+        photoUrl: photoUrl,
+      };
+
+      const validatedData = insertAlumniSchema.parse(alumniData);
+
+      const alumni = await storage.createAlumni(validatedData);
+      res.status(201).json(alumni);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error("❌ Alumni validation errors:", error.errors);
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        console.error("❌ POST alumni error:", error);
+        res.status(500).json({ 
+          message: "Failed to create alumni record",
+          error: error instanceof Error ? error.message : String(error)
+        });
+      }
+    }
+  });
+
+  app.put("/api/alumni/:id", upload.single("photo"), async (req, res) => {
+    try {
+      const id = getId(req);
+      const oldAlumni = await storage.getAlumniById(id);
+
+      if (!oldAlumni) {
+        return res.status(404).json({ message: "Alumni record not found" });
+      }
+
+      let photoUrl = oldAlumni.photoUrl;
+      if (req.file) {
+        photoUrl = await uploadFile(req, "alumni");
+        if (oldAlumni.photoUrl) {
+          await deleteFile(oldAlumni.photoUrl);
+        }
+      }
+
+      const validatedData = insertAlumniSchema.partial().parse({
+        ...req.body,
+        photoUrl: photoUrl,
+      });
+
+      const alumni = await storage.updateAlumni(id, validatedData);
+      res.json(alumni);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error("❌ Alumni update validation errors:", error.errors);
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        console.error("❌ PUT alumni error:", error);
+        res.status(500).json({ message: "Failed to update alumni record" });
+      }
+    }
+  });
+
+  app.delete("/api/alumni/:id", async (req, res) => {
+    try {
+      const id = getId(req);
+
+      const alumni = await storage.getAlumniById(id);
+      if (!alumni) {
+        return res.status(404).json({ message: "Alumni record not found" });
+      }
+
+      await storage.deleteAlumni(id);
+
+      if (alumni.photoUrl) {
+        await deleteFile(alumni.photoUrl);
+      }
+
+      res.status(204).send();
+    } catch (error) {
+      console.error("❌ DELETE alumni error:", error);
+      res.status(500).json({ message: "Failed to delete alumni record" });
+    }
+  });
 
 app.post("/api/upload", upload.single("uploadFile"), async (req, res) => {
   const file = req.file;

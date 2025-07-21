@@ -6,6 +6,7 @@ import {
   ManagementTeamModel,
   CellsCommitteesModel,
   GalleryModel,
+  AlumniModel, // Import AlumniModel
 } from "./models/index";
 
 import { Types } from "mongoose";
@@ -76,7 +77,14 @@ export const storage = {
   createGallery: (data: any) => storage._gallery.create(data),
   updateGallery: (id: string, data: any) => storage._gallery.update(id, data),
   deleteGallery: (id: string) => storage._gallery.delete(id),
-  getGalleryById:(id: string) => storage._gallery.getById(id),
+  getGalleryById: (id: string) => storage._gallery.getById(id),
+
+  // Alumni
+  getAlumni: () => storage._alumni.getAll(),
+  createAlumni: (data: any) => storage._alumni.create(data),
+  updateAlumni: (id: string, data: any) => storage._alumni.update(id, data),
+  deleteAlumni: (id: string) => storage._alumni.delete(id),
+  getAlumniById: (id: string) => storage._alumni.getById(id),
 
   // Internal crud helpers
   _faculty: createCrud(FacultyModel),
@@ -86,4 +94,5 @@ export const storage = {
   _management: createCrud(ManagementTeamModel),
   _cells: createCrud(CellsCommitteesModel),
   _gallery: createCrud(GalleryModel),
+  _alumni: createCrud(AlumniModel), // Add AlumniModel to internal crud helpers
 };
