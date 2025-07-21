@@ -384,14 +384,25 @@ app.post("/api/faculty", upload.single("image"), async (req, res) => {
   });
   app.post("/api/news", async (req, res) => {
     try {
-      const validatedData = insertNewsSchema.parse(req.body);
+      // Generate a unique newsId if not provided
+      const newsData = {
+        ...req.body,
+        newsId: req.body.newsId || randomUUID()
+      };
+      
+      const validatedData = insertNewsSchema.parse(newsData);
       const news = await storage.createNews(validatedData);
       res.status(201).json(news);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("❌ News validation errors:", error.errors);
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Failed to create news" });
+        console.error("❌ POST news error:", error);
+        res.status(500).json({ 
+          message: "Failed to create news",
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
   });
